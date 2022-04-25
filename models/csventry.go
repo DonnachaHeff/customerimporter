@@ -27,19 +27,6 @@ func GetAllDomains(data []CsvEntry) []string {
 	return allDomains
 }
 
-func retrieveDomainName(fullEmailAddress string) string {
-	// find the final @ symbol within the email address
-	at := strings.LastIndex(fullEmailAddress, "@")
-	if at >= 0 {
-		// seperate the domain from the full address
-		_, domain := fullEmailAddress[:at], fullEmailAddress[at+1:]
-
-		return domain
-	}
-
-	return ""
-}
-
 func CountOccurencesOfDomain(allDomains []string) map[string]int {
 	frequency_records := make(map[string]int)
 
@@ -69,4 +56,17 @@ func SortDomainsAlphabetically(recordInfo map[string]int) []string {
 	sort.Strings(keys)
 
 	return keys
+}
+
+func retrieveDomainName(fullEmailAddress string) string {
+	// find the final @ symbol within the email address
+	at := strings.LastIndex(fullEmailAddress, "@")
+	if at >= 0 {
+		// seperate the domain from the full address
+		_, domain := fullEmailAddress[:at], fullEmailAddress[at+1:]
+
+		return domain
+	}
+
+	return ""
 }
