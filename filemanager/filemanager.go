@@ -11,17 +11,13 @@ import (
 	"github.com/DonnachaHeff/customerimporter/models"
 )
 
-func checkError(err error) {
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
 func ReadCsvFile(filePath string) map[string]int {
 	entries := make(map[string]int)
 
 	f, err := os.Open(filePath)
-	checkError(err)
+	if err != nil {
+		log.Default()
+	}
 	defer f.Close()
 
 	csvReader := csv.NewReader(f)
@@ -54,7 +50,10 @@ func ReadCsvFile(filePath string) map[string]int {
 func OutputSortedDomainsResultToFile(sortedDomains []string, recordInfo map[string]int) {
 	// create file to write results to
 	f, err := os.Create("Results")
-	checkError(err)
+	if err != nil {
+		log.Default()
+	}
+
 	defer f.Close()
 
 	w := bufio.NewWriter(f)
@@ -62,7 +61,9 @@ func OutputSortedDomainsResultToFile(sortedDomains []string, recordInfo map[stri
 	for _, key := range sortedDomains {
 		// print each domain and it's total number of customers
 		_, err = fmt.Fprintln(w, "Domain Name: ", key, ", Total Number of Customers: ", recordInfo[key])
-		checkError(err)
+		if err != nil {
+			log.Default()
+		}
 	}
 	w.Flush()
 }
