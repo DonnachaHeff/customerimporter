@@ -62,7 +62,7 @@ func ReadCsvFile(filePath string) map[string]int {
 	return entries
 }
 
-func OutputSortedDomainsResultToFile(sortedDomains []string, recordInfo map[string]int) {
+func OutputSortedDomainsResultToFile(sortedDomains []string, domains map[string]int) {
 	// create file to write results to
 	var f *os.File
 
@@ -87,7 +87,7 @@ func OutputSortedDomainsResultToFile(sortedDomains []string, recordInfo map[stri
 
 	for _, key := range sortedDomains {
 		// print each domain and it's total number of customers
-		_, err = fmt.Fprintln(w, "Domain Name: ", key, ", Total Number of Customers: ", recordInfo[key])
+		_, err = fmt.Fprintln(w, "Domain Name: ", key, ", Total Number of Customers: ", domains[key])
 		if err != nil {
 			log.Fatal(err)
 		}

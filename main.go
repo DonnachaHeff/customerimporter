@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	records := filemanager.ReadCsvFile("./customers.csv")
-	sortedDomains := models.SortDomainsAlphabetically(records)
-	filemanager.OutputSortedDomainsResultToFile(sortedDomains, records)
+	domains := filemanager.ReadCsvFile("./customers.csv")
+	sortedDomains := models.SortDomainsAlphabetically(domains)
+	filemanager.OutputSortedDomainsResultToFile(sortedDomains, domains)
 }
