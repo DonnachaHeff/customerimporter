@@ -16,7 +16,7 @@ func ReadCsvFile(filePath string) map[string]int {
 
 	f, err := os.Open(filePath)
 	if err != nil {
-		log.Default()
+		log.Fatal(err)
 	}
 	defer f.Close()
 
@@ -33,7 +33,7 @@ func ReadCsvFile(filePath string) map[string]int {
 
 		domain, err := models.RetrieveDomainName(record[2])
 		if err != nil {
-			log.Default()
+			log.Fatal(err)
 		} else {
 			if _, ok := entries[domain]; ok {
 				entries[domain] += 1
@@ -51,7 +51,7 @@ func OutputSortedDomainsResultToFile(sortedDomains []string, recordInfo map[stri
 	// create file to write results to
 	f, err := os.Create("Results")
 	if err != nil {
-		log.Default()
+		log.Fatal(err)
 	}
 
 	defer f.Close()
@@ -62,7 +62,7 @@ func OutputSortedDomainsResultToFile(sortedDomains []string, recordInfo map[stri
 		// print each domain and it's total number of customers
 		_, err = fmt.Fprintln(w, "Domain Name: ", key, ", Total Number of Customers: ", recordInfo[key])
 		if err != nil {
-			log.Default()
+			log.Fatal(err)
 		}
 	}
 	w.Flush()
