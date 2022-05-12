@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"encoding/csv"
 	"fmt"
+	"io"
 	"log"
 	"os"
 
@@ -16,30 +17,33 @@ func checkError(err error) {
 	}
 }
 
-func ReadCsvFile(filePath string) []models.CsvEntry {
-	var csvEntries []models.CsvEntry
+func ReadCsvFile(filePath string) map[string]int {
+	entries := make(map[string]int)
 
 	f, err := os.Open(filePath)
 	checkError(err)
 	defer f.Close()
 
 	csvReader := csv.NewReader(f)
-	records, err := csvReader.ReadAll()
-	checkError(err)
 
-	for _, line := range records {
-		csvEntry := models.CsvEntry{
-			FirstName: line[0],
-			LastName:  line[1],
-			Email:     line[2],
-			Gender:    line[3],
-			IpAddress: line[4],
+	for {
+		record, err := csvReader.Read()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			log.Fatal(err)
 		}
 
-		csvEntries = append(csvEntries, csvEntry)
+		domain := models.RetrieveDomainName(record[2])
+		if _, ok := entries[domain]; ok {
+			entries[domain] += 1
+		} else {
+			entries[domain] = 1
+		}
 	}
 
-	return csvEntries
+	return entries
 }
 
 func OutputSortedDomainsResultToFile(sortedDomains []string, recordInfo map[string]int) {
