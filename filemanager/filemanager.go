@@ -9,15 +9,30 @@ import (
 	"os"
 
 	"github.com/DonnachaHeff/customerimporter/models"
+	"github.com/Rican7/retry"
+	"github.com/Rican7/retry/strategy"
 )
 
 func ReadCsvFile(filePath string) map[string]int {
 	entries := make(map[string]int)
 
-	f, err := os.Open(filePath)
+	var f *os.File
+
+	// set action for opening file
+	action := func(attempt uint) error {
+		var err error
+
+		f, err = os.Open(filePath)
+
+		return err
+	}
+
+	// retry action 3 times
+	err := retry.Retry(action, strategy.Limit(3))
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	defer f.Close()
 
 	csvReader := csv.NewReader(f)
@@ -33,9 +48,9 @@ func ReadCsvFile(filePath string) map[string]int {
 
 		domain, err := models.RetrieveDomainName(record[2])
 		if err != nil {
-			log.Fatal(err)
+			log.Default()
 		} else {
-			if _, ok := entries[domain]; ok {
+			if _, exists := entries[domain]; exists {
 				entries[domain] += 1
 			} else {
 				entries[domain] = 1
@@ -49,7 +64,19 @@ func ReadCsvFile(filePath string) map[string]int {
 
 func OutputSortedDomainsResultToFile(sortedDomains []string, recordInfo map[string]int) {
 	// create file to write results to
-	f, err := os.Create("Results")
+	var f *os.File
+
+	// action for creating new file
+	action := func(attempt uint) error {
+		var err error
+
+		f, err = os.Create("Results")
+
+		return err
+	}
+
+	// retry action 3 times
+	err := retry.Retry(action, strategy.Limit(3))
 	if err != nil {
 		log.Fatal(err)
 	}
