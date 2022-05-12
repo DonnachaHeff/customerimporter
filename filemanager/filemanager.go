@@ -35,12 +35,17 @@ func ReadCsvFile(filePath string) map[string]int {
 			log.Fatal(err)
 		}
 
-		domain := models.RetrieveDomainName(record[2])
-		if _, ok := entries[domain]; ok {
-			entries[domain] += 1
+		domain, err := models.RetrieveDomainName(record[2])
+		if err != nil {
+			log.Default()
 		} else {
-			entries[domain] = 1
+			if _, ok := entries[domain]; ok {
+				entries[domain] += 1
+			} else {
+				entries[domain] = 1
+			}
 		}
+
 	}
 
 	return entries
