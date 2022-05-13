@@ -28,5 +28,5 @@ func RetrieveDomainName(fullEmailAddress string) (string, error) {
 	}
 
 	// should skip and return error
-	return "", errors.New("empty domain name")
+	return "", errors.New("invalid domain name")
 }

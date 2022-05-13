@@ -36,7 +36,6 @@ func ReadCsvFile(filePath string) map[string]int {
 	defer f.Close()
 
 	csvReader := csv.NewReader(f)
-
 	for {
 		record, err := csvReader.Read()
 		if err == io.EOF {
@@ -49,6 +48,7 @@ func ReadCsvFile(filePath string) map[string]int {
 		domain, err := data.RetrieveDomainName(record[2])
 		if err != nil {
 			log.Print(err)
+			fmt.Printf("Invalid Name: %s\n\n", record[2])
 		} else {
 			if _, exists := entries[domain]; exists {
 				entries[domain] += 1
