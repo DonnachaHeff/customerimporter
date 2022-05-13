@@ -8,7 +8,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/DonnachaHeff/customerimporter/models"
+	"github.com/DonnachaHeff/customerimporter/data"
 	"github.com/Rican7/retry"
 	"github.com/Rican7/retry/strategy"
 )
@@ -46,9 +46,9 @@ func ReadCsvFile(filePath string) map[string]int {
 			log.Fatal(err)
 		}
 
-		domain, err := models.RetrieveDomainName(record[2])
+		domain, err := data.RetrieveDomainName(record[2])
 		if err != nil {
-			log.Default()
+			log.Print(err)
 		} else {
 			if _, exists := entries[domain]; exists {
 				entries[domain] += 1
