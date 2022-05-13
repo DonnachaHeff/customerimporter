@@ -7,7 +7,7 @@ import (
 )
 
 func SortDomainsAlphabetically(recordInfo map[string]int) []string {
-	keys := []string{}
+	keys := make([]string, 0, len(recordInfo))
 
 	for key := range recordInfo {
 		keys = append(keys, key)
